@@ -21,14 +21,20 @@ export default function Navbar({ theme, onToggleTheme }) {
   }, [])
 
   useEffect(() => {
+    let ticking = false
     const onScroll = () => {
-      let cur = 'home'
-      for (const id of ['home','about','experience','skills','projects','contact']) {
-        const el = document.getElementById(id)
-        if (el && el.getBoundingClientRect().top < innerHeight * 0.45) cur = id
-      }
-      setActive(cur)
-      setShowTop(scrollY > 500)
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        let cur = 'home'
+        for (const id of ['home','about','experience','skills','projects','contact']) {
+          const el = document.getElementById(id)
+          if (el && el.getBoundingClientRect().top < innerHeight * 0.45) cur = id
+        }
+        setActive(cur)
+        setShowTop(scrollY > 500)
+        ticking = false
+      })
     }
     addEventListener('scroll', onScroll, { passive: true })
     onScroll()
